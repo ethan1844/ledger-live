@@ -3,13 +3,14 @@ import network from "../network";
 
 export let loaded = false;
 
-const fetchERC20Tokens = async () => {
+export const fetchERC20Tokens = async () => {
   const { data } = await network({ url: "http://localhost:3000" });
 
-  addTokens(data.map(convertERC20));
+  const tokens = data.map(convertERC20);
+
+  return tokens;
 };
 
 export const preloadTokens = async () => {
     await fetchERC20Tokens();
-    loaded = true;
 };

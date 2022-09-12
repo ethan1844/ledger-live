@@ -19,7 +19,8 @@ import "~/renderer/styles/global";
 import "~/renderer/live-common-setup";
 import { getLocalStorageEnvs } from "~/renderer/experimental";
 import "~/renderer/i18n/init";
-import { preloadTokens } from "@ledgerhq/live-common/currencies/index"
+import { prepareCurrency } from "~/renderer/bridge/cache";
+import { findCryptoCurrencyById } from "@ledgerhq/live-common/currencies/index";
 
 import logger, { enableDebugLogger } from "~/logger";
 import LoggerTransport from "~/logger/logger-transport-renderer";
@@ -60,6 +61,8 @@ async function init() {
     log,
     Transport,
   });
+
+  prepareCurrency(findCryptoCurrencyById("ethereum"));
 
   if (process.env.PLAYWRIGHT_RUN) {
     const spectronData = await getKey("app", "PLAYWRIGHT_RUN", {});
