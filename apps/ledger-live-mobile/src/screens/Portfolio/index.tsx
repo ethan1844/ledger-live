@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState, memo } from "react";
 import { useSelector } from "react-redux";
-import { FlatList, LayoutChangeEvent } from "react-native";
+import { FlatList, LayoutChangeEvent, ScrollView } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -226,7 +226,7 @@ function PortfolioScreen({ navigation }: Props) {
   );
 
   return (
-    <>
+    <ScrollView>
       <TabBarSafeAreaView>
         <Flex px={6} py={4}>
           <FirmwareUpdateBanner />
@@ -242,23 +242,61 @@ function PortfolioScreen({ navigation }: Props) {
           currentPositionY={currentPositionY}
           graphCardEndPosition={graphCardEndPosition}
         />
-        <AnimatedFlatListWithRefreshControl
-          data={data}
-          style={{
-            flex: 1,
-            paddingTop: 48,
-          }}
-          contentContainerStyle={{ paddingBottom: TAB_BAR_SAFE_HEIGHT }}
-          renderItem={({ item }: { item: React.ReactNode }) => item}
-          keyExtractor={(_: any, index: number) => String(index)}
-          showsVerticalScrollIndicator={false}
-          onScroll={handleScroll}
-          testID={
-            distribution.list && distribution.list.length
-              ? "PortfolioAccountsList"
-              : "PortfolioEmptyAccount"
-          }
-        />
+        <Box onLayout={onPortfolioCardLayout}>
+          <GraphCardContainer
+            counterValueCurrency={counterValueCurrency}
+            portfolio={portfolio}
+            areAccountsEmpty={areAccountsEmpty}
+            showGraphCard={showAssets}
+            currentPositionY={currentPositionY}
+            graphCardEndPosition={graphCardEndPosition}
+          />
+        </Box>
+        <Box background={colors.background.main} px={6} mt={6}>
+          <Assets assets={assetsToDisplay} />
+          {distribution.list.length < maxAssetsToDisplay ? (
+            <Button
+              type="shade"
+              size="large"
+              outline
+              mt={6}
+              iconPosition="left"
+              Icon={Icons.PlusMedium}
+              onPress={openAddModal}
+            >
+              {t("account.emptyState.addAccountCta")}
+            </Button>
+          ) : (
+            <Button
+              type="shade"
+              size="large"
+              outline
+              mt={6}
+              onPress={goToAssets}
+            >
+              {t("portfolio.seelAllAssets")}
+            </Button>
+          )}
+        </Box>
+        <Box background={colors.background.main}>
+          <SectionContainer px={0} minHeight={240}>
+            <SectionTitle
+              title={t("portfolio.recommended.title")}
+              containerProps={{ mb: 7, mx: 6 }}
+            />
+            <Carousel cardsVisibility={carouselVisibility} />
+          </SectionContainer>
+        </Box>
+        <SectionContainer px={6}>
+          <SectionTitle title={t("analytics.allocation.title")} />
+          <Flex minHeight={94}>
+            <AllocationsSection />
+          </Flex>
+        </SectionContainer>
+        <SectionContainer px={6} mb={8} isLast>
+          <SectionTitle title={t("analytics.operations.title")} />
+          <OperationsHistorySection accounts={accounts} />
+        </SectionContainer>
         <MigrateAccountsBanner />
         <Header
           counterValueCurrency={counterValueCurrency}
@@ -273,7 +311,7 @@ function PortfolioScreen({ navigation }: Props) {
         isOpened={isAddModalOpened}
         onClose={closeAddModal}
       />
-    </>
+    </ScrollView>
   );
 }
 

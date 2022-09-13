@@ -29,8 +29,8 @@ import getWindowDimensions from "../../logic/getWindowDimensions";
 import { track } from "../../analytics";
 
 function PortfolioHeader({
-  currentPositionY,
-  graphCardEndPosition,
+  // currentPositionY,
+  // graphCardEndPosition,
   portfolio,
   counterValueCurrency,
   hidePortfolio,
@@ -71,48 +71,48 @@ function PortfolioHeader({
   }, [navigation]);
 
   const notificationsCount = allIds.length - seenIds.length;
-
-  const WalletTitleAnimation = useAnimatedStyle(() => {
-    const opacity =
-      currentPositionY.value === 0
-        ? 1
-        : interpolate(
-            currentPositionY.value,
-            [graphCardEndPosition - 40, graphCardEndPosition],
-            [1, 0],
-            Extrapolate.CLAMP,
-          );
-
-    return {
-      opacity,
-    };
-  }, [graphCardEndPosition]);
-
-  const PortfolioValueAnimation = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      currentPositionY.value,
-      [graphCardEndPosition + 110, graphCardEndPosition + 120],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      opacity,
-    };
-  }, [graphCardEndPosition]);
-
-  const BackgroundOpacity = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      currentPositionY.value,
-      [graphCardEndPosition + 80, graphCardEndPosition + 100],
-      [0, 1],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      opacity,
-    };
-  }, [graphCardEndPosition]);
+  //
+  // const WalletTitleAnimation = useAnimatedStyle(() => {
+  //   const opacity =
+  //     currentPositionY.value === 0
+  //       ? 1
+  //       : interpolate(
+  //           currentPositionY.value,
+  //           [graphCardEndPosition - 40, graphCardEndPosition],
+  //           [1, 0],
+  //           Extrapolate.CLAMP,
+  //         );
+  //
+  //   return {
+  //     opacity,
+  //   };
+  // }, [graphCardEndPosition]);
+  //
+  // const PortfolioValueAnimation = useAnimatedStyle(() => {
+  //   const opacity = interpolate(
+  //     currentPositionY.value,
+  //     [graphCardEndPosition + 110, graphCardEndPosition + 120],
+  //     [0, 1],
+  //     Extrapolate.CLAMP,
+  //   );
+  //
+  //   return {
+  //     opacity,
+  //   };
+  // }, [graphCardEndPosition]);
+  //
+  // const BackgroundOpacity = useAnimatedStyle(() => {
+  //   const opacity = interpolate(
+  //     currentPositionY.value,
+  //     [graphCardEndPosition + 80, graphCardEndPosition + 100],
+  //     [0, 1],
+  //     Extrapolate.CLAMP,
+  //   );
+  //
+  //   return {
+  //     opacity,
+  //   };
+  // }, [graphCardEndPosition]);
 
   const Header = styled(Flex)`
     position: absolute;
@@ -129,9 +129,9 @@ function PortfolioHeader({
     position: absolute;
   `;
 
-  const balanceHistory = portfolio.balanceHistory;
-  const currentPortfolio = balanceHistory[balanceHistory.length - 1];
-  const unit = counterValueCurrency.units[0];
+  // const balanceHistory = portfolio.balanceHistory;
+  // const currentPortfolio = balanceHistory[balanceHistory.length - 1];
+  // const unit = counterValueCurrency.units[0];
 
   const windowsWidth = getWindowDimensions().width;
   return (
@@ -154,8 +154,9 @@ function PortfolioHeader({
             width: windowsWidth,
             height: 92,
             backgroundColor: colors.background.drawer,
+            opacity: 0,
           },
-          BackgroundOpacity,
+          // BackgroundOpacity,
         ]}
       />
       <Box>
@@ -168,49 +169,49 @@ function PortfolioHeader({
         </Touchable>
       </Box>
       <Flex flexDirection={"row"} alignItems={"center"}>
+        {/* <CenteredElement width={windowsWidth}> */}
+        {/*  <Animated.View */}
+        {/*    height={"100%"} */}
+        {/*    justifyContent={"center"} */}
+        {/*    style={[PortfolioValueAnimation]} */}
+        {/*  > */}
+        {/*    <Flex flexDirection={"column"} alignItems={"center"}> */}
+        {/*      {balanceHistory ? ( */}
+        {/*        <> */}
+        {/*          <Text */}
+        {/*            variant={"small"} */}
+        {/*            fontWeight={"semiBold"} */}
+        {/*            color={"neutral.c70"} */}
+        {/*            fontSize="11px" */}
+        {/*          > */}
+        {/*            {t("portfolio.walletBalancebb")} */}
+        {/*          </Text> */}
+        {/*          <Text */}
+        {/*            variant={"small"} */}
+        {/*            fontWeight={"semiBold"} */}
+        {/*            color={"neutral.c100"} */}
+        {/*            fontSize="18px" */}
+        {/*          > */}
+        {/*            <CurrencyUnitValue */}
+        {/*              unit={unit} */}
+        {/*              value={currentPortfolio.value} */}
+        {/*            /> */}
+        {/*          </Text> */}
+        {/*        </> */}
+        {/*      ) : ( */}
+        {/*        <> */}
+        {/*          <Placeholder width={100} containerHeight={18} /> */}
+        {/*          <Placeholder width={150} containerHeight={28} /> */}
+        {/*        </> */}
+        {/*      )} */}
+        {/*    </Flex> */}
+        {/*  </Animated.View> */}
+        {/* </CenteredElement> */}
         <CenteredElement width={windowsWidth}>
           <Animated.View
             height={"100%"}
             justifyContent={"center"}
-            style={[PortfolioValueAnimation]}
-          >
-            <Flex flexDirection={"column"} alignItems={"center"}>
-              {balanceHistory ? (
-                <>
-                  <Text
-                    variant={"small"}
-                    fontWeight={"semiBold"}
-                    color={"neutral.c70"}
-                    fontSize="11px"
-                  >
-                    {t("portfolio.walletBalance")}
-                  </Text>
-                  <Text
-                    variant={"small"}
-                    fontWeight={"semiBold"}
-                    color={"neutral.c100"}
-                    fontSize="18px"
-                  >
-                    <CurrencyUnitValue
-                      unit={unit}
-                      value={currentPortfolio.value}
-                    />
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <Placeholder width={100} containerHeight={18} />
-                  <Placeholder width={150} containerHeight={28} />
-                </>
-              )}
-            </Flex>
-          </Animated.View>
-        </CenteredElement>
-        <CenteredElement width={windowsWidth}>
-          <Animated.View
-            height={"100%"}
-            justifyContent={"center"}
-            style={[WalletTitleAnimation]}
+            // style={[WalletTitleAnimation]}
           >
             <Flex flexDirection={"row"} alignItems={"center"}>
               <Text
@@ -220,9 +221,9 @@ function PortfolioHeader({
                 fontSize="16px"
                 mr={2}
               >
-                {t("portfolio.walletBalance")}
+                {t("portfolio.walletBalanceaa")}
               </Text>
-              {!hidePortfolio && <DiscreetModeButton size={20} />}
+              {true && <DiscreetModeButton size={20} />}
               {incidents.length > 0 && (
                 <Box pl={2}>
                   <Touchable onPress={onStatusErrorButtonPress}>
