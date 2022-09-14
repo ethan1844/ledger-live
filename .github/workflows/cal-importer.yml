@@ -19,7 +19,7 @@ jobs:
           remote: true
           ref: ledger-live-bot
           repository: LedgerHQ/crypto-assets
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.CI_BOT_TOKEN }}
           path: crypto-assets
       - uses: actions/setup-node@v3
         with:
