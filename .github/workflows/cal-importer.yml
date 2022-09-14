@@ -54,7 +54,7 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: install and build
         run: |
-          pnpm i --filter=\"./libs/ledgerjs/**\"" --frozen-lockfile
+          pnpm i --filter=\"./libs/ledgerjs/**\" --frozen-lockfile
           pnpm build:ljs
         shell: bash
       - name: run script
