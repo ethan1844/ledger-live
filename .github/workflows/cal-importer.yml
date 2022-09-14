@@ -1,0 +1,47 @@
+name: "[Testing] 'Dynamic cal importer'"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - LIVE-2174-dynamic-cal
+
+concurrency:
+  group: bot-dyn-cal
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: prepare runner
+        run: |
+          sudo growpart /dev/nvme0n1 1
+          sudo resize2fs /dev/nvme0n1p1
+      - uses: actions/checkout@v3
+      - name: Retrieving crypto-assets
+        uses: actions/checkout@v3
+        with:
+          remote: true
+          ref: ledger-live-bot
+          repository: LedgerHQ/crypto-assets
+          token: ${{ secrets.GH_PAT }}
+          path: crypto-assets
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - name: install and build
+        run: |
+          pnpm i --filter=\"./libs/ledgerjs/**\"" --frozen-lockfile
+          pnpm build:ljs
+        shell: bash
+      - name: run script
+        run: |
+        mkdir calreport
+        node libs/ledgerjs/script/crypto-assets-importer/index.js $PWD/crypto-assets
+      - name: upload logs to github artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: calreport
+          path: /Users/henri.ly-ext/Projects/ledger-live/libs/ledgerjs/packages/cryptoassets/data/
