@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: calreport
-          path: /Users/henri.ly-ext/Projects/ledger-live/libs/ledgerjs/packages/cryptoassets/data/
+          path: libs/ledgerjs/packages/cryptoassets/data/
