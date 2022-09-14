@@ -53,6 +53,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: install and build
+        continue-on-error: true
         run: |
           pnpm i --filter="live-cli..." --filter="ledger-live" --frozen-lockfile
           pnpm build:ljs
