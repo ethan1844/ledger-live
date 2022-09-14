@@ -37,8 +37,8 @@ jobs:
         shell: bash
       - name: run script
         run: |
-        mkdir calreport
-        node libs/ledgerjs/script/crypto-assets-importer/index.js $PWD/crypto-assets
+          mkdir calreport
+          node libs/ledgerjs/script/crypto-assets-importer/index.js $PWD/crypto-assets
       - name: upload logs to github artifacts
         if: always()
         uses: actions/upload-artifact@v3
