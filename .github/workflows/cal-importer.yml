@@ -55,7 +55,7 @@ jobs:
       - name: install and build
         continue-on-error: true
         run: |
-          pnpm i --filter="live-cli..." --filter="ledger-live" --frozen-lockfile
+          pnpm i --filter="live-cli..." --filter="ledger-live" --filter="ledger-libs" --frozen-lockfile
           pnpm build:ljs
         shell: bash
       - name: run script
