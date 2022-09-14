@@ -44,6 +44,9 @@ jobs:
           repository: LedgerHQ/crypto-assets
           token: ${{ secrets.CI_BOT_TOKEN }}
           path: crypto-assets
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: latest
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
