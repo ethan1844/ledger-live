@@ -1,15 +1,21 @@
-import React, { useMemo } from "react";
+import React, { createContext, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useTheme } from "styled-components/native";
+import styled, { useTheme } from "styled-components/native";
 import { Box, Text } from "@ledgerhq/native-ui";
 import {
+  debug,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabBarProps,
+} from "@react-navigation/material-top-tabs";
 import { ScrollView, View } from "react-native";
+import { TabsContainer } from "@ledgerhq/native-ui/components/Tabs/TemplateTabs";
+import { ChipTab } from "@ledgerhq/native-ui/components/Tabs/Chip";
 import { NavigatorName, ScreenName } from "../../const";
 import Portfolio from "../../screens/Portfolio";
 // eslint-disable-next-line import/no-cycle
@@ -25,17 +31,83 @@ import Header from "../../screens/Portfolio/Header";
 
 const Tab = createMaterialTopTabNavigator();
 
+const TabBarContainer = styled(Flex)`
+  border-bottom-width: 1px;
+  border-bottom-color: ${p => p.theme.colors.palette.neutral.c40};
+  background-color: transparent;
+`;
+
+function TabBar({ state, descriptors, navigation }: MaterialTopTabBarProps) {
+  return (
+    <TabBarContainer
+      paddingLeft={4}
+      paddingRight={4}
+      paddingBottom={4}
+      paddingTop={4}
+    >
+      <TabsContainer>
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const label = options.title;
+
+          const isActive = state.index === index;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isActive && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
+
+          return (
+            <ChipTab
+              key={index}
+              label={label || "Test"}
+              isActive={isActive}
+              index={index}
+              onPress={onPress}
+            />
+          );
+        })}
+      </TabsContainer>
+    </TabBarContainer>
+  );
+}
+
 function App() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      tabBar={props => <TabBar {...props} />}
+      screenOptions={{
+        tabBarStyle: { backgroundColor: "red" },
+      }}
+      style={{ backgroundColor: "transparent" }}
+      sceneContainerStyle={{ backgroundColor: "transparent" }}
+      tabBarOptions={{ style: { backgroundColor: "transparent" } }}
+      lazy
+      lazyPlaceholder={() => {
+        console.log("PlaceHolderred");
+        return <Box bg={"green"} height={200} width={400} />;
+      }}
+    >
       <Tab.Screen name="Test1" component={Portfolio} />
       <Tab.Screen
         name="Test2"
-        component={() => <Box bg={"red"} height={200} width={400} />}
+        component={() => {
+          console.log("Test2red");
+          return <Box bg={"red"} height={200} width={400} />;
+        }}
       />
     </Tab.Navigator>
   );
 }
+
+export const ScrollPositionContext = createContext(null);
 
 export default function PortfolioNavigator() {
   const { colors } = useTheme();
@@ -47,32 +119,43 @@ export default function PortfolioNavigator() {
   const accounts = useSelector(accountsSelector);
 
   const currentPositionY = useSharedValue(0);
-  const handleScroll = useAnimatedScrollHandler(event => {
-    currentPositionY.value = event.contentOffset.y;
-  });
 
   return (
-    <View style={{ flex: 1 }} onScroll={handleScroll}>
-      <Text>sdsqqsddsqdsqdsq</Text>
-      <BackgroundGradient
-        currentPositionY={currentPositionY}
-        graphCardEndPosition={300}
-      />
-      <ScrollView
-        contentContainerStyle={{ flex: 1 }}
-        onScroll={handleScroll}
-        nestedScrollEnabled={true}
-      >
+    <ScrollPositionContext.Provider value={currentPositionY}>
+      <View style={{ flex: 1, backgroundColor: "red" }}>
+        <Text>sdsqqsddsqdsqdsq</Text>
+        <BackgroundGradient
+          currentPositionY={currentPositionY}
+          graphCardEndPosition={0}
+        />
+        <Text>azazazaz</Text>
+        {/* <Box bg={"transparent"} height={200} width={400} /> */}
+        <Header
+        // currentPositionY={currentPositionY}
+        // graphCardEndPosition={graphCardEndPosition}
+        // counterValueCurrency={counterValueCurrency}
+        // portfolio={portfolio}
+        // hidePortfolio={areAccountsEmpty}
+        />
+
         <Stack.Navigator
           screenOptions={stackNavigationConfig}
           initialRouteName={ScreenName.Portfolio}
           backBehavior={"initialRoute"}
+          options={{
+            cardStyle: { backgroundColor: "transparent" },
+            overlayStyle: { backgroundColor: "transparent" },
+            presentation: "transparentModal",
+          }}
         >
           <Stack.Screen
             name={ScreenName.Portfolio}
             component={App}
             options={{
               headerShown: false,
+              cardStyle: { backgroundColor: "transparent" },
+              overlayStyle: { backgroundColor: "transparent" },
+              presentation: "transparentModal",
             }}
           />
           <Stack.Screen
@@ -81,15 +164,8 @@ export default function PortfolioNavigator() {
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
-      </ScrollView>
-      <Header
-      // currentPositionY={currentPositionY}
-      // graphCardEndPosition={graphCardEndPosition}
-      // counterValueCurrency={counterValueCurrency}
-      // portfolio={portfolio}
-      // hidePortfolio={areAccountsEmpty}
-      />
-    </View>
+      </View>
+    </ScrollPositionContext.Provider>
   );
 }
 

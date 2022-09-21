@@ -19,6 +19,7 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import { Portfolio } from "@ledgerhq/types-live";
 import { Currency } from "@ledgerhq/types-cryptoassets";
+import { View } from "react-native";
 import Touchable from "../../components/Touchable";
 import { NavigatorName, ScreenName } from "../../const";
 import CurrencyUnitValue from "../../components/CurrencyUnitValue";
@@ -114,20 +115,15 @@ function PortfolioHeader({
   //   };
   // }, [graphCardEndPosition]);
 
-  const Header = styled(Flex)`
-    position: absolute;
-  `;
+  const Header = styled(Flex)``;
 
   const CenteredElement = styled(Flex).attrs((p: { width?: number }) => ({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     height: 48,
-    left: -p.width / 2 + p.width * 0.15,
     width: p.width * 0.7,
-  }))`
-    position: absolute;
-  `;
+  }))``;
 
   // const balanceHistory = portfolio.balanceHistory;
   // const currentPortfolio = balanceHistory[balanceHistory.length - 1];
@@ -145,20 +141,6 @@ function PortfolioHeader({
       height={92}
       pt={44}
     >
-      <Animated.View
-        style={[
-          {
-            display: "flex",
-            position: "absolute",
-            flexDirection: "row",
-            width: windowsWidth,
-            height: 92,
-            backgroundColor: colors.background.drawer,
-            opacity: 0,
-          },
-          // BackgroundOpacity,
-        ]}
-      />
       <Box>
         <Touchable onPress={onNotificationButtonPress}>
           {notificationsCount > 0 ? (
@@ -168,7 +150,7 @@ function PortfolioHeader({
           )}
         </Touchable>
       </Box>
-      <Flex flexDirection={"row"} alignItems={"center"}>
+      <Flex flexDirection={"row"} alignItems={"center"} bg={"purple"}>
         {/* <CenteredElement width={windowsWidth}> */}
         {/*  <Animated.View */}
         {/*    height={"100%"} */}
@@ -208,7 +190,7 @@ function PortfolioHeader({
         {/*  </Animated.View> */}
         {/* </CenteredElement> */}
         <CenteredElement width={windowsWidth}>
-          <Animated.View
+          <View
             height={"100%"}
             justifyContent={"center"}
             // style={[WalletTitleAnimation]}
@@ -232,7 +214,7 @@ function PortfolioHeader({
                 </Box>
               )}
             </Flex>
-          </Animated.View>
+          </View>
         </CenteredElement>
       </Flex>
       <Box>
