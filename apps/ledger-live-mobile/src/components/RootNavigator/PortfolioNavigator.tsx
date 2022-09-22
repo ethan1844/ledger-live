@@ -37,6 +37,11 @@ const TabBarContainer = styled(Flex)`
   background-color: transparent;
 `;
 
+const TestNftGallery = () => {
+  console.log("Test3red");
+  return <Box bg={"red"} height={200} width={400} />;
+};
+
 function TabBar({ state, descriptors, navigation }: MaterialTopTabBarProps) {
   return (
     <TabBarContainer
@@ -89,20 +94,14 @@ function App() {
       style={{ backgroundColor: "transparent" }}
       sceneContainerStyle={{ backgroundColor: "transparent" }}
       tabBarOptions={{ style: { backgroundColor: "transparent" } }}
-      lazy
+      // lazy
       lazyPlaceholder={() => {
         console.log("PlaceHolderred");
         return <Box bg={"green"} height={200} width={400} />;
       }}
     >
       <Tab.Screen name="Test1" component={Portfolio} />
-      <Tab.Screen
-        name="Test2"
-        component={() => {
-          console.log("Test2red");
-          return <Box bg={"red"} height={200} width={400} />;
-        }}
-      />
+      <Tab.Screen name="Test2" component={TestNftGallery} />
     </Tab.Navigator>
   );
 }
@@ -139,23 +138,67 @@ export default function PortfolioNavigator() {
         />
 
         <Stack.Navigator
-          screenOptions={stackNavigationConfig}
+          screenOptions={{
+            cardOverlayEnabled: true,
+            cardStyle: { backgroundColor: "red" },
+            headerStyle: {
+              backgroundColor: "red",
+              elevation: 0, // remove shadow on Android
+              shadowOpacity: 0, // remove shadow on iOS
+            },
+            presentation: "transparentModal",
+            headerShown: false,
+            presentation: "transparentModal",
+            headerMode: "none",
+            mode: "modal",
+            transparentCard: true,
+            cardStyle: { opacity: 1 },
+            gestureEnabled: true,
+            headerTitle: null,
+            headerRight: null,
+            headerBackTitleVisible: false,
+            title: null,
+          }}
           initialRouteName={ScreenName.Portfolio}
           backBehavior={"initialRoute"}
           options={{
-            cardStyle: { backgroundColor: "transparent" },
-            overlayStyle: { backgroundColor: "transparent" },
+            cardOverlayEnabled: true,
+            cardStyle: { backgroundColor: "red" },
+            overlayStyle: { backgroundColor: "red" },
             presentation: "transparentModal",
+            headerShown: false,
+            presentation: "transparentModal",
+            headerMode: "none",
+            mode: "modal",
+            transparentCard: true,
+            cardStyle: { opacity: 1 },
+            gestureEnabled: true,
+            headerTitle: null,
+            headerRight: null,
+            headerBackTitleVisible: false,
+            title: null,
           }}
         >
           <Stack.Screen
             name={ScreenName.Portfolio}
             component={App}
             options={{
+              cardOverlayEnabled: true,
               headerShown: false,
               cardStyle: { backgroundColor: "transparent" },
-              overlayStyle: { backgroundColor: "transparent" },
+              overlayStyle: { backgroundColor: "red" },
               presentation: "transparentModal",
+              headerShown: false,
+              presentation: "transparentModal",
+              headerMode: "none",
+              mode: "modal",
+              transparentCard: true,
+              cardStyle: { opacity: 1 },
+              gestureEnabled: true,
+              headerTitle: null,
+              headerRight: null,
+              headerBackTitleVisible: false,
+              title: null,
             }}
           />
           <Stack.Screen
@@ -164,6 +207,7 @@ export default function PortfolioNavigator() {
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
+        <Box height={200} width={400} />
       </View>
     </ScrollPositionContext.Provider>
   );
