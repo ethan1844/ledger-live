@@ -134,18 +134,19 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-30
-      - name: create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          arch: x86_64
-          target: default
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          ram-size: 4096M
-          script: echo "Generated AVD snapshot for caching."
+      # Removing this step for now as it doesn't seem to ever get triggers and it's wasting 5 mins. Requires investigation
+      # - name: create AVD and generate snapshot for caching
+      #   if: steps.avd-cache.outputs.cache-hit != 'true'
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 30
+      #     arch: x86_64
+      #     target: default
+      #     force-avd-creation: false
+      #     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+      #     disable-animations: false
+      #     ram-size: 4096M
+      #     script: echo "Generated AVD snapshot for caching."
       - name: Build Android app for Detox test run
         run: pnpm mobile e2e:build -c android.emu.release       
       - name: Run Android tests
@@ -160,7 +161,7 @@ jobs:
           ram-size: 4096M
           script: |
             nohup sh -c "/Users/runner/Library/Android/sdk/platform-tools/adb logcat '*:D' > adb-log.txt" &
-            pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit
+            DETOX_ARGV_OVERRIDE="--forceExit -w 1" pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing
       - name: Compress Emulator Log
         if: always()
         run: gzip -9 adb-log.txt
