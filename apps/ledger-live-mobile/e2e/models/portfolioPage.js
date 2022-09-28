@@ -10,6 +10,6 @@ export default class PortfolioPage {
   }
 
   static async emptyPortfolioIsVisible() {
-    await testHelpers.verifyTextIsVisible("Wallet balance");
+    await testHelpers.verifyIsVisible("PortfolioEmptyAccount");
   }
 }
