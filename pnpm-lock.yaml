@@ -22,6 +22,9 @@ patchedDependencies:
   react-native-image-crop-tools@1.6.2:
     hash: ykxjy5s7xujdxmsgrwxo5mh3y4
     path: patches/react-native-image-crop-tools@1.6.2.patch
+  detox@19.12.2:
+    hash: jk65ywmoetliq4wyoplo6s5sfi
+    path: patches/detox@19.12.2.patch
 
 importers:
 

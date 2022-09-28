@@ -1,0 +1,13 @@
+diff --git a/src/devices/common/drivers/android/exec/ADB.js b/src/devices/common/drivers/android/exec/ADB.js
+index 9b0b346a5ae812809be308fbf83f2c15b3d1c6a5..9fa4b628f03868b58adf48fb51310d2dd56d22eb 100644
+--- a/src/devices/common/drivers/android/exec/ADB.js
++++ b/src/devices/common/drivers/android/exec/ADB.js
+@@ -8,7 +8,7 @@ const { escape } = require('../../../../../utils/pipeCommands');
+ const DeviceHandle = require('../tools/DeviceHandle');
+ const EmulatorHandle = require('../tools/EmulatorHandle');
+ 
+-const INSTALL_TIMEOUT = 45000; // TODO Double check 45s makes sense
++const INSTALL_TIMEOUT = 120000; // TODO Double check 45s makes sense
+ 
+ class ADB {
+   constructor() {
