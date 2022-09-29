@@ -100,8 +100,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: pnpm
-          cache-dependency-path: "**/pnpm-lock.yaml"
+          # cache: pnpm
+          # cache-dependency-path: "**/pnpm-lock.yaml"
       - name: bump npm
         run: npm i -g npm@8.12.2
       - uses: ruby/setup-ruby@v1
@@ -161,7 +161,7 @@ jobs:
           ram-size: 4096M
           script: |
             nohup sh -c "/Users/runner/Library/Android/sdk/platform-tools/adb logcat '*:D' > adb-log.txt" &
-            pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit --detectOpenHandles --headless
+            pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit --detectOpenHandles
       - name: Compress Emulator Log
         if: always()
         run: gzip -9 adb-log.txt
