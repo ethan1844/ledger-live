@@ -161,7 +161,7 @@ jobs:
           ram-size: 4096M
           script: |
             nohup sh -c "/Users/runner/Library/Android/sdk/platform-tools/adb logcat '*:D' > adb-log.txt" &
-            pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit --detectOpenHandles
+            pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit --detectOpenHandles --headless
       - name: Compress Emulator Log
         if: always()
         run: gzip -9 adb-log.txt
