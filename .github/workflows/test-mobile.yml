@@ -117,6 +117,13 @@ jobs:
           cache: 'gradle'
       - name: setup Android SDK
         uses: android-actions/setup-android@v2.0.8
+      - name: Download & Starting Android Emulator
+        run: |
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "emulator"
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "system-images;android-30;default;x86_64"
+          echo "no" | $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager create avd --force --name Nexus_6 --device "Nexus 6" -k 'system-images;android-30;default;x86_64'
+          $ANDROID_HOME/emulator/emulator -avd Nexus_6 -memory 4096 -verbose -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none &
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
       - name: Install dependencies
         run: pnpm i --filter="live-mobile..." --filter="ledger-live" --no-frozen-lockfile --unsafe-perm
       - name: Build dependencies
@@ -150,16 +157,7 @@ jobs:
       - name: Build Android app for Detox test run
         run: pnpm mobile e2e:build -c android.emu.release       
       - name: Run Android tests
-        uses: reactivecircus/android-emulator-runner@v2
-        timeout-minutes: 20
-        with:
-          api-level: 30
-          arch: x86_64
-          target: default
-          avd-name: Nexus_6
-          emulator-options: -verbose -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          ram-size: 4096M
-          script: |
+        run: |
             nohup sh -c "/Users/runner/Library/Android/sdk/platform-tools/adb logcat '*:D' > adb-log.txt" &
             pnpm mobile e2e:test -c android.emu.release --loglevel verbose --record-logs all --record-timeline all --take-screenshots all --record-videos failing --forceExit --detectOpenHandles
       - name: Compress Emulator Log
