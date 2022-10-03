@@ -11,31 +11,64 @@ concurrency:
 jobs:
   start-runner:
     name: "start ec2 instance (Linux)"
-    if: ${{ always() }}
-    uses: ledgerhq/actions/.github/workflows/start-linux-runner.yml@main
-    secrets:
-      CI_BOT_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+    runs-on: [self-hosted, ledger-live-assets]
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+      ec2-running: ${{ steps.set-ec2-running-output.outputs.ec2-running }}
+    steps:
+      - name: configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_STG }}:role/ledger-live-assets-sa-role
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: ledger-live-assets
+      - name: start ec2 runner
+        id: start-ec2-runner
+        if: steps.configure-aws-credentials.outcome == 'success'
+        uses: LedgerHQ/actions/ec2-linux-runner@main
+        with:
+          mode: start
+          github-token: ${{ secrets.CI_BOT_TOKEN }}
+          project: 2092
+          ami-name-filter: ledger-live-runner
+          instance-type: t3.medium
+          instance-volume-size: 30
+          subnet-id: subnet-0e2d6401ff98ec8a6
+          security-group-id: sg-0c84fb8212c15d469
+      - name: Set `ec2-running` output
+        id: set-ec2-running-output
+        run: echo "::set-output name=ec2-running::${{ steps.start-ec2-runner.outcome == 'success' }}"
 
   stop-runner:
     name: "stop ec2 instance (Linux)"
     needs: [start-runner, run-bot]
-    uses: ledgerhq/actions/.github/workflows/stop-linux-runner.yml@main
-    if: ${{ always() }}
-    with:
-      label: ${{ needs.start-runner.outputs.label }}
-      ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
-    secrets:
-      CI_BOT_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
-
+    runs-on: [self-hosted, ledger-live-assets]
+    if: ${{ always() && needs.start-runner.outputs.ec2-running == 'true' }}
+    steps:
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_STG }}:role/ledger-live-assets-sa-role
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: ledger-live-assets
+      - name: stop ec2 runner
+        uses: LedgerHQ/actions/ec2-linux-runner@main
+        with:
+          mode: stop
+          github-token: ${{ secrets.CI_BOT_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
 
   run-bot:
     runs-on: ${{ needs.start-runner.outputs.label }}
+    if: ${{ needs.start-runner.outputs.ec2-running == 'true' }}
     needs: [start-runner]
     steps:
-      - name: prepare runner
-        run: |
-          sudo growpart /dev/nvme0n1 1
-          sudo resize2fs /dev/nvme0n1p1
       - uses: actions/checkout@v3
       - name: Retrieving crypto-assets
         uses: actions/checkout@v3
