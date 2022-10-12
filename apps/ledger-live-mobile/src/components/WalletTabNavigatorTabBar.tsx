@@ -3,8 +3,15 @@ import { useTheme } from "styled-components/native";
 import React, { memo, useCallback } from "react";
 import styled from "@ledgerhq/native-ui/components/styled";
 import { Flex, Text } from "@ledgerhq/native-ui";
+import {
+  CollapsibleHeaderContainer,
+  StickyView,
+} from "@r0b0t3d/react-native-collapsible";
+import { Portal } from "@gorhom/portal";
 import { track } from "../analytics";
 import { rgba } from "../colors";
+import Header from "../screens/Portfolio/Header";
+import { Box } from "../../../../libs/ui/packages/native/lib";
 
 const TabBarContainer = styled(Flex)`
   background-color: transparent;
@@ -64,28 +71,39 @@ function WalletTabNavigatorTabBar({
   navigation,
 }: MaterialTopTabBarProps) {
   return (
-    <TabBarContainer
-      paddingLeft={6}
-      paddingRight={4}
-      paddingBottom={4}
-      paddingTop={4}
-    >
-      <Flex flexDirection={"row"}>
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
+    <Portal hostName="CustomPortalHost">
+      {/*
+     <CollapsibleHeaderContainer>
+*/}
+      {/* <Box py={6} px={6} bg={"red"}> */}
+      {/*  <Header hidePortfolio={false} /> */}
+      {/* </Box> */}
+      {/* <StickyView style={{ paddingTop: 0 }}> */}
+      <TabBarContainer
+        paddingLeft={6}
+        paddingRight={4}
+        paddingBottom={4}
+        paddingTop={4}
+      >
+        <Flex flexDirection={"row"}>
+          {state.routes.map((route, index) => {
+            const { options } = descriptors[route.key];
 
-          return (
-            <MemoTab
-              key={index}
-              route={route}
-              label={options.title}
-              isActive={state.index === index}
-              navigation={navigation}
-            />
-          );
-        })}
-      </Flex>
-    </TabBarContainer>
+            return (
+              <MemoTab
+                key={index}
+                route={route}
+                label={options.title}
+                isActive={state.index === index}
+                navigation={navigation}
+              />
+            );
+          })}
+        </Flex>
+      </TabBarContainer>
+      {/*    </StickyView>
+     </CollapsibleHeaderContainer> */}
+    </Portal>
   );
 }
 
