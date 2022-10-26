@@ -256,3 +256,58 @@ jobs:
                 body,
               })
             }
+
+  allure-report:
+    name: "Allure Reports Export on Server"
+    needs: [test-desktop-app, test-desktop-app-mac-internal, report]
+    runs-on: [ledger-live, linux]
+    if: always()
+    steps:
+      - name: Download Allure Report - Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: allure-results-windows
+          path: allure-results-windows
+      - name: Download Allure Report - MacOS
+        uses: actions/download-artifact@v2
+        with:
+          name: allure-results-macos
+          path: allure-results-macos
+      - name: Download Allure Report - Linux
+        uses: actions/download-artifact@v2
+        with:
+          name: allure-results-linux
+          path: allure-results-linux
+      - name: Send Results and Generate Allure Report - Windows
+        uses: LedgerHQ/send-to-allure-server-action@2.0.0
+        if: ${{ always() }}  # always() needed because we want report for failed tests as well
+        with:
+          allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+          build-name: ${{ github.workflow }}-windows
+          build-url: https://github.com/LedgerHQ/lama-ethereum/actions/runs/${{ github.run_id }}
+          username: ${{ secrets.ALLURE_LOGIN }}
+          password: ${{ secrets.ALLURE_PASSWORD }}
+          allure-results: /runner/_work/ledger-live/ledger-live/allure-results-windows
+          path: "playwright/windows/${{ steps.branch-name.outputs.current_branch }}"
+      - name: Send Results and Generate Allure Report - MacOS
+        uses: LedgerHQ/send-to-allure-server-action@2.0.0
+        if: ${{ always() }}
+        with:
+          allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+          build-name: ${{ github.workflow }}-macos
+          build-url: https://github.com/LedgerHQ/lama-ethereum/actions/runs/${{ github.run_id }}
+          username: ${{ secrets.ALLURE_LOGIN }}
+          password: ${{ secrets.ALLURE_PASSWORD }}
+          allure-results: /runner/_work/ledger-live/ledger-live/allure-results-macos
+          path: "playwright/macos/${{ steps.branch-name.outputs.current_branch }}"
+      - name: Send Results and Generate Allure Report - Linux
+        uses: LedgerHQ/send-to-allure-server-action@2.0.0
+        if: ${{ always() }}
+        with:
+          allure-server-url: "https://ledger-live.ars.green.ledgerlabs.net"
+          build-name: ${{ github.workflow }}-linux
+          build-url: https://github.com/LedgerHQ/lama-ethereum/actions/runs/${{ github.run_id }}
+          username: ${{ secrets.ALLURE_LOGIN }}
+          password: ${{ secrets.ALLURE_PASSWORD }}
+          allure-results: /runner/_work/ledger-live/ledger-live/allure-results-linux
+          path: "playwright/linux/${{ steps.branch-name.outputs.current_branch }}"

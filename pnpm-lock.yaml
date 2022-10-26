@@ -196,6 +196,7 @@ importers:
       '@vitejs/plugin-react': ^2.0.0
       '@xstate/inspect': ^0.4.1
       '@xstate/react': ^1.6.3
+      allure-playwright: 2.0.0-beta.19
       animated: ^0.2.2
       async: ^3.2.2
       axios: ^0.25.0
@@ -462,6 +463,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.30.7_c7y5ywelxb7ljhphzvpugacpku
       '@typescript-eslint/parser': 5.28.0_3rubbgt5ekhqrcgx4uwls3neim
       '@vitejs/plugin-react': 2.0.1_vite@3.0.8
+      allure-playwright: 2.0.0-beta.19
       babel-cli: 6.26.0
       babel-eslint: 10.1.0_eslint@7.32.0
       babel-jest: 27.5.1_@babel+core@7.17.10
@@ -21519,6 +21521,21 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /allure-js-commons/2.0.0-beta.19:
+    resolution: {integrity: sha512-sgt7TnU7s8QIzEOmLFO0T5ih4W2YbLrcsL1ElO7WN/dPzIww4G1BBJQDK98VCS+cG5qIljBYRuJ+rtzKWgtM8A==}
+    dependencies:
+      mkdirp: 1.0.4
+      properties: 1.2.1
+      uuid: 8.3.2
+    dev: true
+
+  /allure-playwright/2.0.0-beta.19:
+    resolution: {integrity: sha512-TMSZToE0oPXz0qfH1cMaO5kcMrV8GkSlM1650Hk9dwpR/ldH2zx23/E7l1f77Elpqp/bGNyekjXNhYSx9ihCVg==}
+    dependencies:
+      '@playwright/test': 1.22.2
+      allure-js-commons: 2.0.0-beta.19
+    dev: true
 
   /alphanum-sort/1.0.2:
     resolution: {integrity: sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=}
@@ -46089,6 +46106,11 @@ packages:
       graceful-fs: 4.2.10
       retry: 0.12.0
       signal-exit: 3.0.7
+    dev: true
+
+  /properties/1.2.1:
+    resolution: {integrity: sha512-qYNxyMj1JeW54i/EWEFsM1cVwxJbtgPp8+0Wg9XjNaK6VE/c4oRi6PNu5p7w1mNXEIQIjV5Wwn8v8Gz82/QzdQ==}
+    engines: {node: '>=0.10'}
     dev: true
 
   /property-information/5.6.0:
