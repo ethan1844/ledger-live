@@ -13,7 +13,7 @@ import {
 } from "@ledgerhq/types-live";
 import type { CryptoCurrency } from "@ledgerhq/types-cryptoassets";
 export type { AppCandidate };
-type DeviceActionEvent = {
+export type DeviceActionEvent = {
   text: string;
   x: number;
   y: number;
@@ -66,7 +66,7 @@ export type MutationSpec<T extends Transaction> = {
   // Name what this mutation is doing
   name: string;
   // The maximum number of times to execute this mutation for a given test run
-  maxRun?: number;
+  maxRun: number;
   // Express the transaction to be done
   // it returns either a transaction T, or an array with T and a list of patch to apply to it
   transaction: (arg: TransactionArg<T>) => TransactionRes<T>;
@@ -132,6 +132,8 @@ export type AppSpec<T extends Transaction> = {
   minViableAmount?: BigNumber;
   // global timeout to consider the run due date for the spec. (since a seed could have theorically an infinite amount of accounts and mutation could take a lot of time to validate transactions, we need a way to limit the run time)
   skipMutationsTimeout?: number;
+  // do not expect an account to always be found (Hedera case)
+  allowEmptyAccounts?: boolean;
 };
 export type SpecReport<T extends Transaction> = {
   spec: AppSpec<T>;

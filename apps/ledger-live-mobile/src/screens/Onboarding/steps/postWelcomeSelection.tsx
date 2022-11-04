@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { RouteProp, useNavigation } from "@react-navigation/native";
 import { Text, ScrollListContainer } from "@ledgerhq/native-ui";
+import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { ImageSourcePropType } from "react-native";
 
@@ -12,24 +12,41 @@ import Illustration from "../../../images/illustration/Illustration";
 import DiscoverCard from "../../Discover/DiscoverCard";
 import { setHasOrderedNano } from "../../../actions/settings";
 import DeviceSetupView from "../../../components/DeviceSetupView";
+import { OnboardingNavigatorParamList } from "../../../components/RootNavigator/types/OnboardingNavigator";
+import {
+  StackNavigatorNavigation,
+  StackNavigatorProps,
+} from "../../../components/RootNavigator/types/helpers";
+import { BaseNavigatorStackParamList } from "../../../components/RootNavigator/types/BaseNavigator";
+import Touchable from "../../../components/Touchable";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const setupLedgerImg = require("../../../images/illustration/Shared/_SetupLedger.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const buyNanoImg = require("../../../images/illustration/Shared/_BuyNanoX.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const discoverLiveImg = require("../../../images/illustration/Shared/_DiscoverLive.png");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const syncCryptoImg = require("../../../images/illustration/Shared/_SyncFromDesktop.png");
+const images = {
+  light: {
+    setupLedgerImg: require("../../../images/illustration/Light/Device/XFolded.png"),
+    buyNanoImg: require("../../../images/illustration/Shared/_BuyNanoX.png"),
+    discoverLiveImg: require("../../../images/illustration/Light/_050.png"),
+    syncCryptoImg: require("../../../images/illustration/Light/_074.png"),
+  },
+  dark: {
+    setupLedgerImg: require("../../../images/illustration/Dark/Device/XFolded.png"),
+    buyNanoImg: require("../../../images/illustration/Shared/_BuyNanoX.png"),
+    discoverLiveImg: require("../../../images/illustration/Dark/_050.png"),
+    syncCryptoImg: require("../../../images/illustration/Dark/_074.png"),
+  },
+};
 
 type PostWelcomeDiscoverCardProps = {
   title: string;
   subTitle: string;
   event: string;
-  eventProperties?: Record<string, any>;
+  eventProperties?: Record<string, unknown>;
   testID: string;
-  onPress: () => void;
-  imageSource: ImageSourcePropType;
+  onPress: React.ComponentProps<typeof Touchable>["onPress"];
+  onValidate?: () => void;
+  imageSource: {
+    light: ImageSourcePropType;
+    dark: ImageSourcePropType;
+  };
 };
 
 const PostWelcomeDiscoverCard = ({
@@ -48,35 +65,44 @@ const PostWelcomeDiscoverCard = ({
       subTitle={subTitle}
       subTitleProps={{ variant: "paragraph" }}
       event={event}
-      eventProperties={eventProperties}
       testID={testID}
       onPress={onPress}
+      eventProperties={eventProperties}
       cardProps={{
         mx: 0,
         mb: 6,
         borderWidth: 1,
         borderColor: "transparent",
       }}
+      imageContainerProps={{
+        position: "relative",
+        height: "auto",
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+        paddingRight: 4,
+      }}
       Image={
         <Illustration
-          size={130}
-          darkSource={imageSource}
-          lightSource={imageSource}
+          size={105}
+          darkSource={imageSource.dark}
+          lightSource={imageSource.light}
         />
       }
     />
   );
 };
 
-function PostWelcomeSelection({
-  route,
-}: {
-  route: RouteProp<{ params: { userHasDevice: boolean } }, "params">;
-}) {
+type NavigationProps = StackNavigatorProps<
+  OnboardingNavigatorParamList,
+  ScreenName.OnboardingPostWelcomeSelection
+>;
+
+function PostWelcomeSelection({ route }: NavigationProps) {
   const { userHasDevice } = route.params;
   const dispatch = useDispatch();
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProps["navigation"]>();
   const { t } = useTranslation();
 
   const setupLedger = useCallback(() => {
@@ -84,7 +110,9 @@ function PostWelcomeSelection({
   }, [navigation]);
 
   const buyLedger = useCallback(() => {
-    navigation.navigate(NavigatorName.BuyDevice);
+    (
+      navigation as unknown as StackNavigatorNavigation<BaseNavigatorStackParamList>
+    ).navigate(NavigatorName.BuyDevice);
   }, [navigation]);
 
   const exploreLedger = useCallback(() => {
@@ -96,9 +124,14 @@ function PostWelcomeSelection({
     navigation.navigate(ScreenName.OnboardingImportAccounts);
   }, [navigation]);
 
+  const getSourceImageObj = (key: keyof typeof images.light) => ({
+    light: images.light[key],
+    dark: images.dark[key],
+  });
+
   return (
     <DeviceSetupView hasBackButton>
-      <ScrollListContainer flex={1} px={6}>
+      <ScrollListContainer flex={1} mx={6}>
         <TrackScreen
           category="Onboarding"
           name={userHasDevice ? "Choice With Device" : "Choice No Device"}
@@ -125,7 +158,7 @@ function PostWelcomeSelection({
             }}
             testID={`Onboarding PostWelcome - Selection|SetupLedger`}
             onPress={setupLedger}
-            imageSource={setupLedgerImg}
+            imageSource={getSourceImageObj("setupLedgerImg")}
           />
         )}
         <PostWelcomeDiscoverCard
@@ -137,7 +170,7 @@ function PostWelcomeSelection({
           }}
           testID={`Onboarding PostWelcome - Selection|ExploreLedger`}
           onPress={exploreLedger}
-          imageSource={discoverLiveImg}
+          imageSource={getSourceImageObj("discoverLiveImg")}
         />
         {userHasDevice && (
           <PostWelcomeDiscoverCard
@@ -149,7 +182,7 @@ function PostWelcomeSelection({
             }}
             testID={`Onboarding PostWelcome - Selection|SyncCryptos`}
             onPress={syncCryptos}
-            imageSource={syncCryptoImg}
+            imageSource={getSourceImageObj("syncCryptoImg")}
           />
         )}
         {!userHasDevice && (
@@ -162,7 +195,7 @@ function PostWelcomeSelection({
             }}
             testID={`Onboarding PostWelcome - Selection|BuyNano`}
             onPress={buyLedger}
-            imageSource={buyNanoImg}
+            imageSource={getSourceImageObj("buyNanoImg")}
           />
         )}
       </ScrollListContainer>
