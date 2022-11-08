@@ -125,7 +125,7 @@ function PairDevicesInner({ navigation, route }: NavigationProps) {
       const device = {
         deviceName: bleDevice.name,
         deviceId: bleDevice.id,
-        modelId: "nanoX",
+        modelId: deviceMeta?.modelId || "nanoX",
         wired: false,
       };
       dispatch({
