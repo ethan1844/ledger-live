@@ -5431,7 +5431,7 @@
     }
   },
   "customImage": {
-    "title": "Lock screen picture",
+    "title": "Choose a picture.\nCreate a vibe.\nMake your Ledger yours.",
     "replace": "Replace",
     "drawer": {
       "title": "Choose an image",
@@ -5449,11 +5449,15 @@
     "timeDisclaimer": "This can take up to 30 seconds",
     "imageLoaded": "Image loaded on {{productName}}",
     "confirmPicture": "Confirm on {{productName}}",
-    "title": "Choose a picture.\nCreate a vibe.\nMake your Ledger yours.",
     "subtitle": "Set a picture of your favourite NFT or a picture from your phone.",
     "customImage": "Custom picture",
     "choosePicture": "Choose a picture",
-    "doThisLater": "Maybe later"
+    "doThisLater": "Maybe later",
+    "preview": {
+      "title": "Preview",
+      "setPicture": "Set custom picture",
+      "editPicture": "Edit picture"
+    }
   },
   "postOnboarding": {
     "hub": {
