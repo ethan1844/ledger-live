@@ -190,6 +190,7 @@ export type SettingsState = {
   sensitiveAnalytics: boolean;
   firstConnectionHasDevice: boolean | null;
   firstConnectHasDeviceUpdated: boolean | null;
+  customImageBackup?: { hex: string; hash: string };
   notifications: {
     allowed: boolean;
     transactions: boolean;
