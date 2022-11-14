@@ -191,13 +191,13 @@ export type SettingsState = {
   firstConnectionHasDevice: boolean | null;
   firstConnectHasDeviceUpdated: boolean | null;
   customImageBackup?: { hex: string; hash: string };
-  notifications: {
-    allowed: boolean;
-    transactions: boolean;
-    market: boolean;
-    announcement: boolean;
-    price: boolean;
-  };
+  notifications: NotificationsSettings;
+};
+
+export type NotificationsSettings = {
+  allowed: boolean;
+  announcements: boolean;
+  recommendations: boolean;
 };
 
 // === WALLET CONNECT STATE ===
