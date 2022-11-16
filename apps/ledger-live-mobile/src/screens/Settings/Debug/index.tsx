@@ -39,6 +39,7 @@ import {
   StackNavigatorProps,
 } from "../../../components/RootNavigator/types/helpers";
 import { SettingsNavigatorStackParamList } from "../../../components/RootNavigator/types/SettingsNavigator";
+import OpenStoryly from "./OpenDebugStoryly";
 
 export function DebugMocks() {
   return (
@@ -64,6 +65,7 @@ export function DebugMocks() {
       <OpenDebugCustomImage />
       <OpenDebugFetchCustomImage />
       <OpenDebugPostOnboarding />
+      <OpenStoryly />
       <OpenDebugPlayground />
       <OpenDebugBlePairingFlow />
       <ReadOnlyModeRow />
