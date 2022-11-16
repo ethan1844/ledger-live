@@ -192,15 +192,28 @@ export const cryptoCurrenciesSelector = createSelector(
 );
 export const accountsTuplesByCurrencySelector = createSelector(
   accountsSelector,
-  (_: State, { currency }: { currency: CryptoCurrency | TokenCurrency }) =>
-    currency,
+  (
+    _: State,
+    {
+      currency,
+    }: {
+      currency: CryptoCurrency | TokenCurrency;
+    },
+  ) => currency,
+  (_: State, { accountIds }: { accountIds?: Map<string, boolean> }) =>
+    accountIds,
   (
     accounts,
     currency,
+    accountIds,
   ): { account: AccountLike; subAccount: SubAccount | null }[] => {
     if (currency.type === "TokenCurrency") {
       return accounts
-        .filter(account => account.currency.id === currency.parentCurrency.id)
+        .filter(
+          account =>
+            account.currency.id === currency.parentCurrency.id &&
+            (accountIds ? accountIds.has(account.id) : true),
+        )
         .map(account => ({
           account,
           subAccount:
@@ -215,7 +228,11 @@ export const accountsTuplesByCurrencySelector = createSelector(
     }
 
     return accounts
-      .filter(account => account.currency.id === currency.id)
+      .filter(
+        account =>
+          account.currency.id === currency.id &&
+          (accountIds ? accountIds.has(account.id) : true),
+      )
       .map(account => ({
         account,
         subAccount: null,
@@ -236,9 +253,13 @@ export const flattenAccountsByCryptoCurrencySelector = createSelector(
 );
 const emptyArray: AccountLike[] = [];
 export const accountsByCryptoCurrencyScreenSelector =
-  (currency: CryptoCurrency) => (state: State) => {
+  (
+    currency: CryptoCurrency | TokenCurrency,
+    accountIds?: Map<string, boolean>,
+  ) =>
+  (state: State) => {
     if (!currency) return emptyArray;
-    return accountsTuplesByCurrencySelector(state, { currency });
+    return accountsTuplesByCurrencySelector(state, { currency, accountIds });
   };
 
 export const flattenAccountsByCryptoCurrencyScreenSelector =
