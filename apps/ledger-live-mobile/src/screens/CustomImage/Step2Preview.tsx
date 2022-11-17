@@ -69,7 +69,7 @@ const Step2Preview = ({ navigation, route }: NavigationProps) => {
 
   const { params } = route;
 
-  const { cropResult: croppedImage, device } = params;
+  const { cropResult: croppedImage, device, baseImageFile } = params;
 
   const handleError = useCallback(
     (error: Error) => {
@@ -115,12 +115,18 @@ const Step2Preview = ({ navigation, route }: NavigationProps) => {
   );
 
   const handleNavigateToPreview = useCallback(() => {
+    if (!processorPreviewImage) {
+      // In theory shouldn't happen since the button is disabled if it's null
+      return;
+    }
+
     navigation.navigate(ScreenName.CustomImagePreviewPostEdit, {
-      ...params,
-      image: resizedImage,
+      imagePreview: processorPreviewImage,
+      baseImageFile,
+      device,
       contrast,
     });
-  }, [contrast, navigation, resizedImage, params]);
+  }, [navigation, processorPreviewImage, device, baseImageFile, contrast]);
 
   return (
     <SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
