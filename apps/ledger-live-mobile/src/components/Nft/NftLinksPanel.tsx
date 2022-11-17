@@ -96,7 +96,7 @@ const NftLinksPanel = ({ links, isOpen, onClose, nftMetadata }: Props) => {
   const handlePressCustomImage = useCallback(() => {
     if (!customImageUri) return;
     navigation.navigate(NavigatorName.CustomImage, {
-      screen: ScreenName.CustomImageStep1Crop,
+      screen: ScreenName.CustomImagePreviewPreEdit,
       params: {
         imageUrl: customImageUri,
         device: null,
