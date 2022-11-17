@@ -3244,8 +3244,8 @@
       "infoTotalDesc": "Includes transaction amount and the selected network fees",
       "gasLimit": "Gas limit",
       "gasPrice": "Gas price",
-      "maxFee" : "Max fee",
-      "maxPriorityFee" : "Max priority fee",
+      "maxFee": "Max fee",
+      "maxPriorityFee": "Max priority fee",
       "nextBlock": "Next block: {{nextBaseFee}}",
       "suggestedPriorityFee": "Suggested: {{lowPriorityFee}} - {{highPriorityFee}}",
       "maxFees": "Max fees",
@@ -5455,6 +5455,7 @@
     "doThisLater": "Maybe later",
     "preview": {
       "title": "Preview",
+      "loading": "Loading preview",
       "setPicture": "Set custom picture",
       "editPicture": "Edit picture"
     }
